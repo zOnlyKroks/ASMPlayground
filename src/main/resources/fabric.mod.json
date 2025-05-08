@@ -15,6 +15,9 @@
   "entrypoints": {
     "mass-asm": [
       "de.zonlykroks.asmplayground.MassASMEntrypoint"
+    ],
+    "modmenu": [
+      "de.zonlykroks.asmplayground.impl.ModMenuApiImpl"
     ]
   },
   "depends": {

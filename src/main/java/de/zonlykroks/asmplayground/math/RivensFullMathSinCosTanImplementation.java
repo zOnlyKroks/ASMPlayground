@@ -1,5 +1,6 @@
 package de.zonlykroks.asmplayground.math;
 
+@SuppressWarnings("unused")
 public class RivensFullMathSinCosTanImplementation {
 
     private static final float BF_SIN_TO_COS;
@@ -23,15 +24,15 @@ public class RivensFullMathSinCosTanImplementation {
         }
     }
 
-    public static double sin(double rad) {
+    public static double Sin(double rad) {
         return BF_sinFull[(int)(rad * BF_radToIndex) & BF_SIN_MASK];
     }
 
-    public static double cos(double rad) {
-        return sin(rad + BF_SIN_TO_COS);
+    public static double Cos(double rad) {
+        return Sin(rad + BF_SIN_TO_COS);
     }
 
-    public static double tan(double rad) {
-        return sin(rad) / cos(rad);
+    public static double Tan(double rad) {
+        return Sin(rad) / Cos(rad);
     }
 }

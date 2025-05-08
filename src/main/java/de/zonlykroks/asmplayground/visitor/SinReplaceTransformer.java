@@ -1,7 +1,7 @@
 package de.zonlykroks.asmplayground.visitor;
 
-import de.zonlykroks.asmplayground.MassASMEntrypoint;
-import de.zonlykroks.asmplayground.config.SinRedirectMode;
+import de.zonlykroks.asmplayground.impl.ModConfig;
+import de.zonlykroks.asmplayground.impl.SinRedirectMode;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -25,7 +25,12 @@ public class SinReplaceTransformer extends ClassVisitor {
                                         String name,
                                         String desc,
                                         boolean isInterface) {
-                SinRedirectMode mode = MassASMEntrypoint.config.redirectMode;
+                if(!ModConfig.INSTANCE.sinRedirectEnabled) {
+                    super.visitMethodInsn(opcode, owner, name, desc, isInterface);
+                    return;
+                }
+
+                SinRedirectMode mode = ModConfig.INSTANCE.sinRedirectMode;
 
                 boolean isFloat = "(F)F".equals(desc);
                 boolean isDouble = "(D)D".equals(desc);
