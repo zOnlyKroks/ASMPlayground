@@ -1,6 +1,7 @@
-package de.zonlykroks.asmplayground.modmenu;
+package de.zonlykroks.asmplayground.config;
 
 public enum SinRedirectMode {
     PIECEWISE,
-    TAYLOR
+    TAYLOR,
+    RIVENS
 }

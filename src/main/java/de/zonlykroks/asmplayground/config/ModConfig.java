@@ -1,4 +1,4 @@
-package de.zonlykroks.asmplayground.modmenu;
+package de.zonlykroks.asmplayground.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

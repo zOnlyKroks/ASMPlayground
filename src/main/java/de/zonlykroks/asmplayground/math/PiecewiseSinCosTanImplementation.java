@@ -1,70 +1,66 @@
 package de.zonlykroks.asmplayground.math;
 
 @SuppressWarnings("unused")
-public class PiecewiseSinImplementation {
+public class PiecewiseSinCosTanImplementation {
 
-    public static double fastPiecewiseSin(float x) {
-        return fastPiecewiseSin((double) x);
-    }
+    // extracted constants to avoid reallocation per-call
+    private static final float TWO_PI        = 6.28318530f;
+    private static final float PI            = 3.14159265f;
+    private static final float HALF_PI       = 1.57079632f;
+    private static final float RECIP_TWO_PI  = 1.0f / TWO_PI;
+    private static final double HALF_PI_D    = HALF_PI;
 
+    /**
+     * Fast piecewise sine approximation (double input).
+     */
     public static double fastPiecewiseSin(double x) {
-        final float TWO_PI = 6.28318530f;
-        final float PI = 3.14159265f;
-        final float HALF_PI = 1.57079632f;
+        // range-reduce into [-PI, PI]
+        float xf = (float) x;
+        int n = (int) (xf * RECIP_TWO_PI + (xf >= 0 ? 0.5f : -0.5f));
+        float xNorm = xf - n * TWO_PI;
 
-        float xFloat = (float) x;
-
-        float recipTwoPI = 1.0f / TWO_PI;
-        int n = (int)(xFloat * recipTwoPI + (xFloat >= 0 ? 0.5f : -0.5f));
-        float xNormalized = xFloat - n * TWO_PI;
-
-        if (Math.abs(xNormalized) < 1e-5f) {
-            return xNormalized;
-        }
-
+        // mirror into [0, PI/2]
         boolean negate = false;
-        if (xNormalized < 0.0f) {
-            xNormalized = -xNormalized;
+        if (xNorm < 0.0f) {
+            xNorm = -xNorm;
             negate = true;
         }
-
-        if (xNormalized > PI) {
-            xNormalized = TWO_PI - xNormalized;
+        if (xNorm > PI) {
+            xNorm = TWO_PI - xNorm;
             negate = !negate;
         }
-
-        if (xNormalized > HALF_PI) {
-            xNormalized = PI - xNormalized;
+        if (xNorm > HALF_PI) {
+            xNorm = PI - xNorm;
         }
 
-        final float xSquared = xNormalized * xNormalized;
-
+        // piecewise polynomial segments
+        float x2 = xNorm * xNorm;
         float result;
-        if (xNormalized < 0.5f) {
-            result = xNormalized * (
-                    1.0f - xSquared * (
-                            0.16666666f - xSquared * (
-                                    0.00833333f - xSquared * 0.00019841f
+        if (xNorm < 0.5f) {
+            result = xNorm * (
+                    1.0f - x2 * (
+                            0.16666666f - x2 * (
+                                    0.00833333f - x2 * 0.00019841f
                             )
                     )
             );
-        } else if (xNormalized < 1.3f) {
-            result = xNormalized * (
-                    1.0f - xSquared * (
-                            0.16666667f - xSquared * (
-                                    0.00833333f - xSquared * (
-                                            0.00019841f - xSquared * 0.00000276f
+        } else if (xNorm < 1.3f) {
+            result = xNorm * (
+                    1.0f - x2 * (
+                            0.16666667f - x2 * (
+                                    0.00833333f - x2 * (
+                                            0.00019841f - x2 * 0.00000276f
                                     )
                             )
                     )
             );
         } else {
-            result = xNormalized * (
-                    1.0f - xSquared * (
-                            0.16666667f - xSquared * (
-                                    0.00833333f - xSquared * (
-                                            0.00019841f - xSquared * (
-                                                    0.00000276f - xSquared * 0.00000002f
+            result = xNorm * (
+                    1.0f - x2 * (
+                            0.16666667f - x2 * (
+                                    0.00833333f - x2 * (
+                                            0.00019841f - x2 * (
+                                                    0.00000276f - x2 * 0.00000002f
                                             )
                                     )
                             )
@@ -73,5 +69,22 @@ public class PiecewiseSinImplementation {
         }
 
         return negate ? -result : result;
-    };
+    }
+
+    /**
+     * Fast piecewise cosine approximation (double input).
+     */
+    public static double fastPiecewiseCos(double x) {
+        // cos(x) = sin(x + PI/2)
+        return fastPiecewiseSin(x + HALF_PI_D);
+    }
+
+    /**
+     * Fast piecewise tangent approximation (double input).
+     */
+    public static double fastPiecewiseTan(double x) {
+        double s = fastPiecewiseSin(x);
+        double c = fastPiecewiseCos(x);
+        return s / c;
+    }
 }
