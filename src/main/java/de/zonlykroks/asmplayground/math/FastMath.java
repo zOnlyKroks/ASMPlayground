@@ -9,15 +9,13 @@ import de.zonlykroks.asmplayground.math.trig.RivensFullMathSinCosTanImplementati
 import de.zonlykroks.asmplayground.math.trig.TaylorSinCosTanImplementation;
 import org.apache.commons.math4.core.jdkmath.AccurateMath;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @SuppressWarnings("unused")
 public class FastMath {
 
     public static double sqrt(double x) {
         return switch (ModConfig.INSTANCE.sqrtRedirectMode) {
             case LUT -> FastSqrt.sqrt(x);
+            case INV_SQRT -> FastSqrt.inversedInvSqrt(x);
         };
     }
 

@@ -110,7 +110,7 @@ public class ExplosionHelper {
         return result;
     }
 
-    public static void blockSwapShuffle(List<BlockPos> list, RandomSource random) {
+    public static void customShuffle(List<BlockPos> list, RandomSource random) {
         int n = list.size();
         int blockSize = 2;
 

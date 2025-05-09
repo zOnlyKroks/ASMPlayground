@@ -37,7 +37,7 @@ public class MassASMEntrypoint implements Runnable {
         );
 
         MassASMTransformer.registerVisitor(
-                "faster-explosion-calc",
+                "faster-math-arc-sin-cos-tan",
                 Filters.contains("net.minecraft"),
                 (className, nextVisitor) -> new ArcSinCosTanReplaceTransformer(Opcodes.ASM9, nextVisitor)
         );

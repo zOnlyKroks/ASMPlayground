@@ -31,6 +31,12 @@ public class ModConfig {
     public boolean optimizeMathSqrt = true;
     public boolean optimizeVecNormalize, optimizeExplosion = true;
 
+    public double sqrtMinLutValue = 0.0;
+    public double sqrtMaxLutValue = 256.0;
+    public double sqrtLutStepSize = 0.001;
+
+    public int sqrtLutSize = (int) ((sqrtMaxLutValue - sqrtMinLutValue) / sqrtLutStepSize) + 1;
+
     static {
         load();
     }

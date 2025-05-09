@@ -30,7 +30,7 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    implementation("com.github.zOnlyKroks:MassAsmer:2.0.0-beta")
+    implementation("com.github.zOnlyKroks:MassAsmer:2.0.1-beta")
 
     implementation("org.apache.commons:commons-math4-core:4.0-beta1")
 

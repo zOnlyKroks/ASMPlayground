@@ -30,46 +30,9 @@ public class ModMenuApiImpl implements ModMenuApi {
         // Get entry builder
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        // Create category
-        ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
+        ConfigCategory sqrt = builder.getOrCreateCategory(Component.literal("Sqrt"));
 
-        general.addEntry(entryBuilder.startBooleanToggle(
-                        Component.literal("Sin Cos Tan Redirect Enable"),
-                        ModConfig.INSTANCE.sinRedirectEnabled
-                ).setDefaultValue(true)
-                .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectEnabled = val)
-                .requireRestart()
-                .build());
-
-        general.addEntry(entryBuilder.startEnumSelector(
-                        Component.literal("Sin Cos Tan Redirect Mode"),
-                        SinRedirectMode.class,
-                        ModConfig.INSTANCE.sinRedirectMode)
-                .setDefaultValue(SinRedirectMode.TAYLOR)
-                .setTooltip(Component.literal("Choose how sin / cos / tan is redirected"))
-                .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectMode = val)
-                .build()
-        );
-
-        general.addEntry(entryBuilder.startBooleanToggle(
-                        Component.literal("Arc Sin Cos Tan Redirect Enable"),
-                        ModConfig.INSTANCE.arcSinRedirectEnabled
-                ).setDefaultValue(true)
-                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinRedirectEnabled = val)
-                .requireRestart()
-                .build());
-
-        general.addEntry(entryBuilder.startEnumSelector(
-                        Component.literal("Sin Redirect Mode"),
-                        ArcSinCosTanRedirectMode.class,
-                        ModConfig.INSTANCE.arcSinCosTanRedirectMode)
-                .setDefaultValue(ArcSinCosTanRedirectMode.APACHE)
-                .setTooltip(Component.literal("Choose how arc sin / arc cos / arc tan is redirected"))
-                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinCosTanRedirectMode = val)
-                .build()
-        );
-
-        general.addEntry(entryBuilder.startBooleanToggle(
+        sqrt.addEntry(entryBuilder.startBooleanToggle(
                         Component.literal("Math Sqrt Redirect"),
                         ModConfig.INSTANCE.optimizeMathSqrt
                 ).setDefaultValue(true)
@@ -77,7 +40,7 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .requireRestart()
                 .build());
 
-        general.addEntry(entryBuilder.startEnumSelector(
+        sqrt.addEntry(entryBuilder.startEnumSelector(
                         Component.literal("Sqrt Redirect Mode"),
                         SqrtRedirectMode.class,
                         ModConfig.INSTANCE.sqrtRedirectMode)
@@ -87,7 +50,91 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .build()
         );
 
-        general.addEntry(entryBuilder.startBooleanToggle(
+        sqrt.addEntry(entryBuilder.startDoubleField(
+                Component.literal("Sqrt LUT Step Size"),
+                ModConfig.INSTANCE.sqrtLutStepSize
+        ).setDefaultValue(0.01)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sqrtLutStepSize = val)
+                .setTooltip(Component.literal("Step size for the sqrt LUT"))
+                .setMin(0.0001)
+                .setMax(1.0)
+                .requireRestart()
+                .build());
+
+        sqrt.addEntry(entryBuilder.startDoubleField(
+                Component.literal("Sqrt LUT Min Value"),
+                ModConfig.INSTANCE.sqrtMinLutValue
+        ).setDefaultValue(0.0)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sqrtMinLutValue = val)
+                .setTooltip(Component.literal("Minimum value for the sqrt LUT"))
+                .setMin(0.0)
+                .setMax(256.0)
+                .requireRestart()
+                .build());
+
+        sqrt.addEntry(entryBuilder.startDoubleField(
+                Component.literal("Sqrt LUT Max Value"),
+                ModConfig.INSTANCE.sqrtMaxLutValue
+        ).setDefaultValue(256.0)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sqrtMaxLutValue = val)
+                .setTooltip(Component.literal("Maximum value for the sqrt LUT"))
+                .setMin(0.0)
+                .setMax(256.0)
+                .requireRestart()
+                .build());
+
+        sqrt.addEntry(entryBuilder.startIntField(
+                Component.literal("Sqrt LUT Max Size"),
+                ModConfig.INSTANCE.sqrtLutSize
+        ).setDefaultValue(256000)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sqrtLutSize = val)
+                .setTooltip(Component.literal("Maximum size of the sqrt LUT"))
+                .setMin(1)
+                .setMax(Integer.MAX_VALUE)
+                .requireRestart()
+                .build());
+
+        ConfigCategory trig = builder.getOrCreateCategory(Component.literal("Trig"));
+
+        trig.addEntry(entryBuilder.startBooleanToggle(
+                        Component.literal("Sin Cos Tan Redirect Enable"),
+                        ModConfig.INSTANCE.sinRedirectEnabled
+                ).setDefaultValue(true)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectEnabled = val)
+                .requireRestart()
+                .build());
+
+        trig.addEntry(entryBuilder.startEnumSelector(
+                        Component.literal("Sin Cos Tan Redirect Mode"),
+                        SinRedirectMode.class,
+                        ModConfig.INSTANCE.sinRedirectMode)
+                .setDefaultValue(SinRedirectMode.TAYLOR)
+                .setTooltip(Component.literal("Choose how sin / cos / tan is redirected"))
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectMode = val)
+                .build()
+        );
+
+        trig.addEntry(entryBuilder.startBooleanToggle(
+                        Component.literal("Arc Sin Cos Tan Redirect Enable"),
+                        ModConfig.INSTANCE.arcSinRedirectEnabled
+                ).setDefaultValue(true)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinRedirectEnabled = val)
+                .requireRestart()
+                .build());
+
+        trig.addEntry(entryBuilder.startEnumSelector(
+                        Component.literal("Sin Redirect Mode"),
+                        ArcSinCosTanRedirectMode.class,
+                        ModConfig.INSTANCE.arcSinCosTanRedirectMode)
+                .setDefaultValue(ArcSinCosTanRedirectMode.APACHE)
+                .setTooltip(Component.literal("Choose how arc sin / arc cos / arc tan is redirected"))
+                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinCosTanRedirectMode = val)
+                .build()
+        );
+
+        ConfigCategory misc = builder.getOrCreateCategory(Component.literal("Misc"));
+
+        misc.addEntry(entryBuilder.startBooleanToggle(
                         Component.literal("Math Floor Redirect"),
                         ModConfig.INSTANCE.optimizeMathFloor
                 ).setDefaultValue(true)
@@ -95,7 +142,7 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .requireRestart()
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(
+        misc.addEntry(entryBuilder.startBooleanToggle(
                         Component.literal("Vec3 Normalize Redirect"),
                         ModConfig.INSTANCE.optimizeVecNormalize
                 ).setDefaultValue(true)
@@ -103,7 +150,7 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .requireRestart()
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(
+        misc.addEntry(entryBuilder.startBooleanToggle(
                         Component.literal("Optimize TnT Calculation"),
                         ModConfig.INSTANCE.optimizeExplosion
                 ).setDefaultValue(true)
