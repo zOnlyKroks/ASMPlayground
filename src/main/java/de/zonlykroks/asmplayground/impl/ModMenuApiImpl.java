@@ -2,6 +2,9 @@ package de.zonlykroks.asmplayground.impl;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import de.zonlykroks.asmplayground.impl.modes.ArcSinCosTanRedirectMode;
+import de.zonlykroks.asmplayground.impl.modes.SinRedirectMode;
+import de.zonlykroks.asmplayground.impl.modes.SqrtRedirectMode;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -31,7 +34,7 @@ public class ModMenuApiImpl implements ModMenuApi {
         ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
 
         general.addEntry(entryBuilder.startBooleanToggle(
-                        Component.literal("Sin Redirect Enable"),
+                        Component.literal("Sin Cos Tan Redirect Enable"),
                         ModConfig.INSTANCE.sinRedirectEnabled
                 ).setDefaultValue(true)
                 .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectEnabled = val)
@@ -39,13 +42,30 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .build());
 
         general.addEntry(entryBuilder.startEnumSelector(
-                        Component.literal("Sin Redirect Mode"),
+                        Component.literal("Sin Cos Tan Redirect Mode"),
                         SinRedirectMode.class,
                         ModConfig.INSTANCE.sinRedirectMode)
                 .setDefaultValue(SinRedirectMode.TAYLOR)
                 .setTooltip(Component.literal("Choose how sin / cos / tan is redirected"))
                 .setSaveConsumer(val -> ModConfig.INSTANCE.sinRedirectMode = val)
+                .build()
+        );
+
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.literal("Arc Sin Cos Tan Redirect Enable"),
+                        ModConfig.INSTANCE.arcSinRedirectEnabled
+                ).setDefaultValue(true)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinRedirectEnabled = val)
                 .requireRestart()
+                .build());
+
+        general.addEntry(entryBuilder.startEnumSelector(
+                        Component.literal("Sin Redirect Mode"),
+                        ArcSinCosTanRedirectMode.class,
+                        ModConfig.INSTANCE.arcSinCosTanRedirectMode)
+                .setDefaultValue(ArcSinCosTanRedirectMode.APACHE)
+                .setTooltip(Component.literal("Choose how arc sin / arc cos / arc tan is redirected"))
+                .setSaveConsumer(val -> ModConfig.INSTANCE.arcSinCosTanRedirectMode = val)
                 .build()
         );
 
@@ -56,6 +76,16 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .setSaveConsumer(val -> ModConfig.INSTANCE.optimizeMathSqrt = val)
                 .requireRestart()
                 .build());
+
+        general.addEntry(entryBuilder.startEnumSelector(
+                        Component.literal("Sqrt Redirect Mode"),
+                        SqrtRedirectMode.class,
+                        ModConfig.INSTANCE.sqrtRedirectMode)
+                .setDefaultValue(SqrtRedirectMode.LUT)
+                .setTooltip(Component.literal("Choose how sqrt is redirected"))
+                .setSaveConsumer(val -> ModConfig.INSTANCE.sqrtRedirectMode = val)
+                .build()
+        );
 
         general.addEntry(entryBuilder.startBooleanToggle(
                         Component.literal("Math Floor Redirect"),

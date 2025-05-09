@@ -2,6 +2,7 @@ package de.zonlykroks.asmplayground.visitor;
 
 import de.zonlykroks.asmplayground.impl.ModConfig;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
@@ -14,7 +15,6 @@ public class ExplosionReplaceTransformer extends ClassVisitor {
     private static final String SERVER_EXPLOSION_CLASS = "net/minecraft/world/level/ServerExplosion";
     private static final String EXPLOSION_HELPER_CLASS = "de/zonlykroks/asmplayground/math/explosion/ExplosionHelper";
 
-    private String currentClass;
     private boolean isTargetClass = false;
 
     public ExplosionReplaceTransformer(int api, ClassVisitor nextVisitor) {
@@ -24,12 +24,7 @@ public class ExplosionReplaceTransformer extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature,
                       String superName, String[] interfaces) {
-        this.currentClass = name;
         this.isTargetClass = name.equals(SERVER_EXPLOSION_CLASS);
-
-        if (this.isTargetClass) {
-            System.out.println("Found target class: " + name);
-        }
 
         super.visit(version, access, name, signature, superName, interfaces);
     }
@@ -102,40 +97,7 @@ public class ExplosionReplaceTransformer extends ClassVisitor {
                             "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/core/Holder;Lnet/minecraft/world/phys/Vec3;)V",
                             false);
 
-                    // ----------- BENCHMARKING START -----------
-
-                    // Create local variables for benchmarking
-                    int vanillaStartTimeVar = newLocal(org.objectweb.asm.Type.getType("J")); // long vanillaStartTime
-                    int vanillaEndTimeVar = newLocal(org.objectweb.asm.Type.getType("J")); // long vanillaEndTime
-                    int optimizedStartTimeVar = newLocal(org.objectweb.asm.Type.getType("J")); // long optimizedStartTime
-                    int optimizedEndTimeVar = newLocal(org.objectweb.asm.Type.getType("J")); // long optimizedEndTime
-                    int vanillaListVar = newLocal(org.objectweb.asm.Type.getType("Ljava/util/List;")); // List<BlockPos> vanillaList
                     int optimizedListVar = newLocal(org.objectweb.asm.Type.getType("Ljava/util/List;")); // List<BlockPos> optimizedList
-
-                    // ----------- BENCHMARK VANILLA IMPLEMENTATION -----------
-
-                    // Record start time
-                    visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
-                    visitVarInsn(Opcodes.LSTORE, vanillaStartTimeVar);
-
-                    // Call original calculateExplodedPositions method
-                    visitVarInsn(Opcodes.ALOAD, 0); // this
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-                            SERVER_EXPLOSION_CLASS,
-                            "calculateExplodedPositions",
-                            "()Ljava/util/List;",
-                            false);
-                    visitVarInsn(Opcodes.ASTORE, vanillaListVar);
-
-                    // Record end time
-                    visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
-                    visitVarInsn(Opcodes.LSTORE, vanillaEndTimeVar);
-
-                    // ----------- BENCHMARK OPTIMIZED IMPLEMENTATION -----------
-
-                    // Record start time
-                    visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
-                    visitVarInsn(Opcodes.LSTORE, optimizedStartTimeVar);
 
                     // Call our optimized implementation
                     // ExplosionHelper.calculateExplodedPositions(this, new BlockPos(int, int, int), this.radius, this.level, this.damageCalculator, this.level.random)
@@ -215,66 +177,6 @@ public class ExplosionReplaceTransformer extends ClassVisitor {
                     // Store optimized result in local variable
                     visitVarInsn(Opcodes.ASTORE, optimizedListVar);
 
-                    // Record end time
-                    visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/System", "nanoTime", "()J", false);
-                    visitVarInsn(Opcodes.LSTORE, optimizedEndTimeVar);
-
-                    // ----------- LOG BENCHMARK RESULTS -----------
-
-                    // Log the benchmark results using System.out.println()
-                    // First, create the StringBuilder for our message
-                    visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
-                    visitInsn(Opcodes.DUP);
-                    visitLdcInsn("Benchmark Results - Vanilla: ");
-                    visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "(Ljava/lang/String;)V", false);
-
-                    // Append vanilla execution time
-                    visitVarInsn(Opcodes.LLOAD, vanillaEndTimeVar);
-                    visitVarInsn(Opcodes.LLOAD, vanillaStartTimeVar);
-                    visitInsn(Opcodes.LSUB);
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
-
-                    // Append " ns, Optimized: "
-                    visitLdcInsn(" ns, Optimized: ");
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-
-                    // Append optimized execution time
-                    visitVarInsn(Opcodes.LLOAD, optimizedEndTimeVar);
-                    visitVarInsn(Opcodes.LLOAD, optimizedStartTimeVar);
-                    visitInsn(Opcodes.LSUB);
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
-
-                    // Append " ns, Speed Improvement: "
-                    visitLdcInsn(" ns, Speed Improvement: ");
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-
-                    // Calculate speed improvement ratio
-                    visitVarInsn(Opcodes.LLOAD, vanillaEndTimeVar);
-                    visitVarInsn(Opcodes.LLOAD, vanillaStartTimeVar);
-                    visitInsn(Opcodes.LSUB);
-                    visitInsn(Opcodes.L2D); // Convert to double for division
-
-                    visitVarInsn(Opcodes.LLOAD, optimizedEndTimeVar);
-                    visitVarInsn(Opcodes.LLOAD, optimizedStartTimeVar);
-                    visitInsn(Opcodes.LSUB);
-                    visitInsn(Opcodes.L2D); // Convert to double
-
-                    visitInsn(Opcodes.DDIV); // Divide to get ratio
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(D)Ljava/lang/StringBuilder;", false);
-
-                    // Append "x"
-                    visitLdcInsn("x");
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-
-                    // Convert StringBuilder to String
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-
-                    // Call System.out.println
-                    visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-                    visitInsn(Opcodes.SWAP); // Swap the top two stack values (PrintStream and our string)
-                    visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-
-                    // ----------- CONTINUE WITH ACTUAL EXPLOSION USING OPTIMIZED IMPLEMENTATION -----------
 
                     // 3. this.hurtEntities();
                     visitVarInsn(Opcodes.ALOAD, 0); // this
@@ -292,7 +194,7 @@ public class ExplosionReplaceTransformer extends ClassVisitor {
                             "()Z",
                             false);
 
-                    org.objectweb.asm.Label skipInteractLabel = new org.objectweb.asm.Label();
+                    Label skipInteractLabel = new Label();
                     visitJumpInsn(Opcodes.IFEQ, skipInteractLabel);
 
                     // ProfilerFiller profilerFiller = Profiler.get();

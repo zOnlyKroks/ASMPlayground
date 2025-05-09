@@ -1,4 +1,4 @@
-package de.zonlykroks.asmplayground.math;
+package de.zonlykroks.asmplayground.math.trig;
 
 @SuppressWarnings("unused")
 public class TaylorSinCosTanImplementation {
@@ -80,7 +80,7 @@ public class TaylorSinCosTanImplementation {
     /**
      * Computes sin(x) with argument reduction and Taylor series.
      */
-    public static double taylorSin(double rad) {
+    public static double taylorsin(double rad) {
         // 1) normalize to [-π, π]
         double x = normalize(rad);
         // 2) reduce to [-π/2, π/2] using symmetry
@@ -98,7 +98,7 @@ public class TaylorSinCosTanImplementation {
     /**
      * Computes cos(x) with argument reduction and Taylor series.
      */
-    public static double taylorCos(double rad) {
+    public static double taylorcos(double rad) {
         // 1) normalize to [-π, π]
         double x = normalize(rad);
         // cos is even, fold into [0, π]
@@ -118,7 +118,7 @@ public class TaylorSinCosTanImplementation {
     /**
      * Computes tan(x) = sin(x) / cos(x).
      */
-    public static double taylorTan(double rad) {
-        return taylorSin(rad) / taylorCos(rad);
+    public static double taylortan(double rad) {
+        return taylorsin(rad) / taylorcos(rad);
     }
 }

@@ -1,9 +1,6 @@
 package de.zonlykroks.asmplayground;
 
-import de.zonlykroks.asmplayground.visitor.ExplosionReplaceTransformer;
-import de.zonlykroks.asmplayground.visitor.SinReplaceTransformer;
-import de.zonlykroks.asmplayground.visitor.SqrtReplaceTransformer;
-import de.zonlykroks.asmplayground.visitor.Vec3dReplaceTransformer;
+import de.zonlykroks.asmplayground.visitor.*;
 import de.zonlykroks.massasmer.MassASMTransformer;
 import de.zonlykroks.massasmer.filter.Filters;
 import org.objectweb.asm.Opcodes;
@@ -18,7 +15,7 @@ public class MassASMEntrypoint implements Runnable {
         MassASMTransformer.registerVisitor(
                 "faster-math-sin-cos-tan",
                 Filters.contains("net.minecraft"),
-                (className, nextVisitor) -> new SinReplaceTransformer(Opcodes.ASM9, nextVisitor)
+                (className, nextVisitor) -> new SinCosTanReplaceTransformer(Opcodes.ASM9, nextVisitor)
         );
 
         MassASMTransformer.registerVisitor(
@@ -37,6 +34,12 @@ public class MassASMEntrypoint implements Runnable {
                 "faster-explosion-calc",
                 Filters.contains("net.minecraft"),
                 (className, nextVisitor) -> new ExplosionReplaceTransformer(Opcodes.ASM9, nextVisitor)
+        );
+
+        MassASMTransformer.registerVisitor(
+                "faster-explosion-calc",
+                Filters.contains("net.minecraft"),
+                (className, nextVisitor) -> new ArcSinCosTanReplaceTransformer(Opcodes.ASM9, nextVisitor)
         );
     }
 }

@@ -2,6 +2,9 @@ package de.zonlykroks.asmplayground.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.zonlykroks.asmplayground.impl.modes.ArcSinCosTanRedirectMode;
+import de.zonlykroks.asmplayground.impl.modes.SinRedirectMode;
+import de.zonlykroks.asmplayground.impl.modes.SqrtRedirectMode;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +23,10 @@ public class ModConfig {
     public static ModConfig INSTANCE;
 
     public SinRedirectMode sinRedirectMode = SinRedirectMode.TAYLOR;
-    public boolean sinRedirectEnabled = true;
+    public ArcSinCosTanRedirectMode arcSinCosTanRedirectMode = ArcSinCosTanRedirectMode.APACHE;
+    public SqrtRedirectMode sqrtRedirectMode = SqrtRedirectMode.LUT;
+
+    public boolean sinRedirectEnabled, arcSinRedirectEnabled = true;
     public boolean optimizeMathFloor = true;
     public boolean optimizeMathSqrt = true;
     public boolean optimizeVecNormalize, optimizeExplosion = true;

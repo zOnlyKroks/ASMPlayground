@@ -30,17 +30,16 @@ public class Vec3dReplaceTransformer extends ClassVisitor {
                         && owner.equals("net/minecraft/world/phys/Vec3")
                         && name.equals("normalize")
                         && desc.equals("()Lnet/minecraft/world/phys/Vec3;")) {
-                    // instead of invokevirtual, call your static helper:
+
                     super.visitMethodInsn(Opcodes.INVOKESTATIC,
-                            "de/zonlykroks/asmplayground/math/FastVec3",   // your helper class
-                            "normalize",                                    // method name
-                            "(Lnet/minecraft/world/phys/Vec3;)" +          // takes Vec3
-                                    "Lnet/minecraft/world/phys/Vec3;",              // returns Vec3
+                            "de/zonlykroks/asmplayground/math/FastVec3",
+                            "normalize",
+                            "(Lnet/minecraft/world/phys/Vec3;)" +
+                                    "Lnet/minecraft/world/phys/Vec3;",
                             false);
                     return;
                 }
 
-                // Default behavior
                 super.visitMethodInsn(opcode, owner, name, desc, isInterface);
             }
         };

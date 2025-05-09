@@ -32,6 +32,8 @@ dependencies {
 
     implementation("com.github.zOnlyKroks:MassAsmer:2.0.0-beta")
 
+    implementation("org.apache.commons:commons-math4-core:4.0-beta1")
+
     modApi ("me.shedaniel.cloth:cloth-config-fabric:18.0.145")
 
     modApi "com.terraformersmc:modmenu:14.0.0-rc.2"

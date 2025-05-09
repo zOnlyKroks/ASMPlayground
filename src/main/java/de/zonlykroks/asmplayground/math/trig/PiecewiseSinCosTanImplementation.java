@@ -1,4 +1,4 @@
-package de.zonlykroks.asmplayground.math;
+package de.zonlykroks.asmplayground.math.trig;
 
 @SuppressWarnings("unused")
 public class PiecewiseSinCosTanImplementation {
@@ -13,7 +13,7 @@ public class PiecewiseSinCosTanImplementation {
     /**
      * Fast piecewise sine approximation (double input).
      */
-    public static double fastPiecewiseSin(double x) {
+    public static double fastPiecewisesin(double x) {
         // range-reduce into [-PI, PI]
         float xf = (float) x;
         int n = (int) (xf * RECIP_TWO_PI + (xf >= 0 ? 0.5f : -0.5f));
@@ -74,17 +74,17 @@ public class PiecewiseSinCosTanImplementation {
     /**
      * Fast piecewise cosine approximation (double input).
      */
-    public static double fastPiecewiseCos(double x) {
+    public static double fastPiecewisecos(double x) {
         // cos(x) = sin(x + PI/2)
-        return fastPiecewiseSin(x + HALF_PI_D);
+        return fastPiecewisesin(x + HALF_PI_D);
     }
 
     /**
      * Fast piecewise tangent approximation (double input).
      */
     public static double fastPiecewiseTan(double x) {
-        double s = fastPiecewiseSin(x);
-        double c = fastPiecewiseCos(x);
+        double s = fastPiecewisesin(x);
+        double c = fastPiecewisecos(x);
         return s / c;
     }
 }

@@ -24,7 +24,6 @@ public class SqrtReplaceTransformer extends ClassVisitor {
                                         String name,
                                         String desc,
                                         boolean isInterface) {
-                // Replace Math.sqrt(double)
                 if (ModConfig.INSTANCE.optimizeMathSqrt && opcode == Opcodes.INVOKESTATIC &&
                         owner.equals("java/lang/Math") &&
                         name.equals("sqrt") &&
