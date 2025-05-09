@@ -110,13 +110,18 @@ public class ExplosionHelper {
         return result;
     }
 
-    public static void customShuffle(List<BlockPos> list, RandomSource random) {
-        Map<BlockPos, Integer> keys = new HashMap<>(list.size());
-        for (BlockPos pos : list) {
-            keys.put(pos, pos.hashCode() ^ random.nextInt());
-        }
+    public static void blockSwapShuffle(List<BlockPos> list, RandomSource random) {
+        int n = list.size();
+        int blockSize = 2;
 
-        list.sort(Comparator.comparingInt(keys::get));
+        for (int i = 0; i < n; i += blockSize * 2) {
+            int j = i + blockSize;
+            if (j + blockSize > n) break;
+
+            for (int k = 0; k < blockSize; k++) {
+                Collections.swap(list, i + k, j + k);
+            }
+        }
     }
 
 
