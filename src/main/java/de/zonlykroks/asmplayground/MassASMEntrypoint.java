@@ -1,5 +1,6 @@
 package de.zonlykroks.asmplayground;
 
+import de.zonlykroks.asmplayground.benchmark.FastMathBenchmark;
 import de.zonlykroks.asmplayground.visitor.*;
 import de.zonlykroks.massasmer.MassASMTransformer;
 import de.zonlykroks.massasmer.filter.Filters;
@@ -11,6 +12,8 @@ public class MassASMEntrypoint implements Runnable {
     @Override
     public void run() {
         System.out.println("MassASMEntrypoint started");
+
+        FastMathBenchmark.testFastMathSystem();
 
         MassASMTransformer.registerVisitor(
                 "faster-math-sin-cos-tan",
@@ -40,6 +43,12 @@ public class MassASMEntrypoint implements Runnable {
                 "faster-math-arc-sin-cos-tan",
                 Filters.contains("net.minecraft"),
                 (className, nextVisitor) -> new ArcSinCosTanReplaceTransformer(Opcodes.ASM9, nextVisitor)
+        );
+
+        MassASMTransformer.registerVisitor(
+                "faster-aabb-intersect",
+                Filters.contains("net.minecraft"),
+                (className, nextVisitor) -> new AABBIntersectsCoordsTransformer(Opcodes.ASM9, nextVisitor)
         );
     }
 }

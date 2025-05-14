@@ -123,7 +123,7 @@ public class ModMenuApiImpl implements ModMenuApi {
                 .build());
 
         trig.addEntry(entryBuilder.startEnumSelector(
-                        Component.literal("Sin Redirect Mode"),
+                        Component.literal("Arc Sin Redirect Mode"),
                         ArcSinCosTanRedirectMode.class,
                         ModConfig.INSTANCE.arcSinCosTanRedirectMode)
                 .setDefaultValue(ArcSinCosTanRedirectMode.APACHE)
@@ -155,6 +155,14 @@ public class ModMenuApiImpl implements ModMenuApi {
                         ModConfig.INSTANCE.optimizeExplosion
                 ).setDefaultValue(true)
                 .setSaveConsumer(val -> ModConfig.INSTANCE.optimizeExplosion = val)
+                .requireRestart()
+                .build());
+
+        misc.addEntry(entryBuilder.startBooleanToggle(
+                        Component.literal("AABB intersect redirect"),
+                        ModConfig.INSTANCE.optimizeAABBIntersectsCoords
+                ).setDefaultValue(true)
+                .setSaveConsumer(val -> ModConfig.INSTANCE.optimizeAABBIntersectsCoords = val)
                 .requireRestart()
                 .build());
 

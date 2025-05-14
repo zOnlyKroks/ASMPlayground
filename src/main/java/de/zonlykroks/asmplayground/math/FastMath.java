@@ -16,6 +16,7 @@ public class FastMath {
         return switch (ModConfig.INSTANCE.sqrtRedirectMode) {
             case LUT -> FastSqrt.sqrt(x);
             case INV_SQRT -> FastSqrt.inversedInvSqrt(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -34,6 +35,7 @@ public class FastMath {
             case POLY -> FastTrigImplementation.fastSinPolynomial(x);
             case LUT -> FastTrigImplementation.fastSinLUT(x);
             case APACHE -> AccurateMath.sin(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -45,6 +47,7 @@ public class FastMath {
             case POLY -> FastTrigImplementation.fastCosPolynomial(x);
             case LUT -> FastTrigImplementation.fastCosLUT(x);
             case APACHE -> AccurateMath.cos(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -56,6 +59,7 @@ public class FastMath {
             case POLY -> FastTrigImplementation.fastTanPolynomial(x);
             case LUT -> FastTrigImplementation.fastTanLUT(x);
             case APACHE -> AccurateMath.tan(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -64,6 +68,7 @@ public class FastMath {
             case POLY -> FastAsinImplementation.fastAsinPolynomial(x);
             case LUT -> FastAsinImplementation.fastAsinLUT(x);
             case APACHE -> AccurateMath.asin(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -72,6 +77,7 @@ public class FastMath {
             case POLY -> FastTrigImplementation.fastAcosPolynomial(x);
             case LUT -> FastTrigImplementation.fastAcosLUT(x);
             case APACHE -> AccurateMath.acos(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 
@@ -80,6 +86,7 @@ public class FastMath {
             case POLY -> FastTrigImplementation.fastAtanPolynomial(x);
             case LUT -> FastTrigImplementation.fastAtanLUT(x);
             case APACHE -> AccurateMath.atan(x);
+            case AUTO -> throw new RuntimeException("How tf did you get here! Benchmark didnt benchmark, i see. Please set the config manually from AUTO mode to any supported mode!");
         };
     }
 }

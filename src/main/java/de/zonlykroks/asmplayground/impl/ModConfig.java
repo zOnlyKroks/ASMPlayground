@@ -29,7 +29,7 @@ public class ModConfig {
     public boolean sinRedirectEnabled, arcSinRedirectEnabled = true;
     public boolean optimizeMathFloor = true;
     public boolean optimizeMathSqrt = true;
-    public boolean optimizeVecNormalize, optimizeExplosion = true;
+    public boolean optimizeVecNormalize, optimizeExplosion, optimizeAABBIntersectsCoords = true;
 
     public double sqrtMinLutValue = 0.0;
     public double sqrtMaxLutValue = 256.0;

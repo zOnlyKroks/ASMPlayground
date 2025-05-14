@@ -1,5 +1,5 @@
 package de.zonlykroks.asmplayground.impl.modes;
 
 public enum SqrtRedirectMode {
-    LUT,INV_SQRT
+    LUT,INV_SQRT,AUTO
 }
